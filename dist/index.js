@@ -20,7 +20,7 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8080;
-app.use(cors({ origin: "https://full-stack-assignment-be-lumv-black.vercel.app" }));
+app.use(cors());
 app.get('/', (_req, res) => {
     return res.send('Express Typescript on Vercel');
 });
