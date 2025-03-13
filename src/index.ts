@@ -7,7 +7,21 @@ const cors = require("cors");
 
 const app = express()
 const port = process.env.PORT || 8080
-app.use(cors({ origin: "*" }));
+app.use(
+	cors({
+	  origin: "*", // Match exactly with frontend's URL
+	  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"], // Allowed methods
+	  allowedHeaders: ["Content-Type", "Authorization"], // Add necessary headers
+	  credentials: false, // If you're using cookies
+	})
+  );
+
+  app.options("*", (req, res) => {
+	res.set("Access-Control-Allow-Origin", "*");
+	res.set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+	res.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+	res.sendStatus(200);
+  });
 
 
 app.get('/', (_req: Request, res: Response) => {
