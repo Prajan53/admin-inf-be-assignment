@@ -3,9 +3,12 @@ import { z } from 'zod'
 import { client } from './lib/prisma'
 const bcrypt = require ("bcrypt");
 const jwt = require("jsonwebtoken");
+const cors = require("cors");
 
 const app = express()
 const port = process.env.PORT || 8080
+app.use(cors({ origin: "https://full-stack-assignment-be-lumv-black.vercel.app" }));
+
 
 app.get('/', (_req: Request, res: Response) => {
 	return res.send('Express Typescript on Vercel')
