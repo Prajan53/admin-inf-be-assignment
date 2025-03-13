@@ -21,18 +21,19 @@ const cors = require("cors");
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8080;
 app.use(cors({
-    origin: "https://full-stack-assignment-be-lumv-black.vercel.app", // Allow only your frontend
+    origin: "*", // Allow only your frontend
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true, // Enable if using cookies or authorization headers
 }));
-app.options("*", (req, res) => {
-    res.header("Access-Control-Allow-Origin", "https://full-stack-assignment-be-lumv-black.vercel.app");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    res.header("Access-Control-Allow-Credentials", "true"); // Add this
-    res.sendStatus(200);
-});
+app.use(express_1.default.json());
+//   app.options("*", (req, res) => {
+// 	res.header("Access-Control-Allow-Origin", "https://full-stack-assignment-be-lumv-black.vercel.app");
+// 	res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+// 	res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+// 	res.header("Access-Control-Allow-Credentials", "true"); // Add this
+// 	res.sendStatus(200);
+//   });
 app.get('/', (_req, res) => {
     return res.send('Express Typescript on Vercel');
 });
