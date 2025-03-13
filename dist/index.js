@@ -24,7 +24,7 @@ app.use(cors({
     origin: "*", // Allow only your frontend
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true, // Enable if using cookies or authorization headers
+    //   credentials: true, // Enable if using cookies or authorization headers
 }));
 app.use(express_1.default.json());
 //   app.options("*", (req, res) => {

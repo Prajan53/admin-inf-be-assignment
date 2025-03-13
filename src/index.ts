@@ -12,7 +12,7 @@ app.use(
 	  origin: "*", // Allow only your frontend
 	  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
 	  allowedHeaders: ["Content-Type", "Authorization"],
-	  credentials: true, // Enable if using cookies or authorization headers
+	//   credentials: true, // Enable if using cookies or authorization headers
 	})
   );
 
