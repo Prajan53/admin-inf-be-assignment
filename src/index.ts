@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express'
 import { z } from 'zod'
 import { client } from './lib/prisma'
+import userMiddleware from './middlewares/userMiddleware';
 const bcrypt = require ("bcrypt");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
@@ -112,7 +113,7 @@ app.post("/login", async (req: Request, res: Response) => {
             return res.status(401).json({ message: "Incorrect credentials" });
         }
 
-        const token = jwt.sign({ id: user.id }, JWT_SECRET_USER, { expiresIn: "1h" });
+        const token = jwt.sign({ id: user.id }, JWT_SECRET_USER);
 
         return res.status(200).json({ message: "Logged in successfully", token });
     } catch (error) {
@@ -136,7 +137,7 @@ app.post("/jobs", async (req: AuthRequest, res: Response) => {
             applicationDeadline: z.string().refine(
                 (val) => !isNaN(Date.parse(val)), 
                 { message: "Invalid date format" }
-            ),
+            )
         });
 
         const parsedBody = jobSchema.safeParse(req.body);
@@ -144,6 +145,8 @@ app.post("/jobs", async (req: AuthRequest, res: Response) => {
             return res.status(400).json({ message: parsedBody.error.format() });
         }
 
+        // console.log(req.userId);
+        // const {adminId} = req.body;
         // if (!req.userId) {
         //     return res.status(401).json({ message: "Unauthorized" });
         // }
@@ -152,7 +155,7 @@ app.post("/jobs", async (req: AuthRequest, res: Response) => {
             //@ts-ignore
             data: {
                 ...parsedBody.data,
-                adminId: "6aa51f07-55af-443c-8fe4-e6276f0f0cc0", // Assign job to authenticated admin
+                adminId: "80965ba1-0fa9-46e4-b332-8df85bc541e6", // Assign job to authenticated admin
             },
         });
 

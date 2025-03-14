@@ -100,7 +100,7 @@ app.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         if (!passwordMatch) {
             return res.status(401).json({ message: "Incorrect credentials" });
         }
-        const token = jwt.sign({ id: user.id }, JWT_SECRET_USER, { expiresIn: "1h" });
+        const token = jwt.sign({ id: user.id }, JWT_SECRET_USER);
         return res.status(200).json({ message: "Logged in successfully", token });
     }
     catch (error) {
@@ -120,18 +120,20 @@ app.post("/jobs", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             jobDescription: zod_1.z.string().min(10, "Job description is too short"),
             requirements: zod_1.z.string().min(5, "Requirements should be more detailed"),
             responsibilities: zod_1.z.string().min(5, "Responsibilities should be more detailed"),
-            applicationDeadline: zod_1.z.string().refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date format" }),
+            applicationDeadline: zod_1.z.string().refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date format" })
         });
         const parsedBody = jobSchema.safeParse(req.body);
         if (!parsedBody.success) {
             return res.status(400).json({ message: parsedBody.error.format() });
         }
+        // console.log(req.userId);
+        // const {adminId} = req.body;
         // if (!req.userId) {
         //     return res.status(401).json({ message: "Unauthorized" });
         // }
         const newJob = yield prisma_1.client.job.create({
             //@ts-ignore
-            data: Object.assign(Object.assign({}, parsedBody.data), { adminId: "6aa51f07-55af-443c-8fe4-e6276f0f0cc0" }),
+            data: Object.assign(Object.assign({}, parsedBody.data), { adminId: "80965ba1-0fa9-46e4-b332-8df85bc541e6" }),
         });
         return res.status(201).json({ message: "Job created successfully", job: newJob });
     }
