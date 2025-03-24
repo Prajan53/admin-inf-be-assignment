@@ -10,23 +10,13 @@ const app = express()
 const port = process.env.PORT || 8080
 app.use(
 	cors({
-	  origin: "*", // Allow only your frontend
+	  origin: "*", 
 	  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
 	  allowedHeaders: ["Content-Type", "Authorization"],
-	//   credentials: true, // Enable if using cookies or authorization headers
 	})
   );
 
   app.use(express.json());
-  
-
-//   app.options("*", (req, res) => {
-// 	res.header("Access-Control-Allow-Origin", "https://full-stack-assignment-be-lumv-black.vercel.app");
-// 	res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
-// 	res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-// 	res.header("Access-Control-Allow-Credentials", "true"); // Add this
-// 	res.sendStatus(200);
-//   });
   
 
 
@@ -35,7 +25,7 @@ app.get('/', (_req: Request, res: Response) => {
 })
 
 app.get('/ping', (_req: Request, res: Response) => {
-	return res.send('pong 🏓')
+	return res.send('pong')
 })
 
 const JWT_SECRET_USER = "TGFI*EAVBG8YWO!Ad%@#ladjsvahb#!&^ka1237474@kv";
@@ -64,7 +54,6 @@ const authSchema = z.object({
         .regex(/[0-9]/, "Password must contain at least one number")
 });
 
-// ✅ Admin Registration
 // @ts-ignore
 app.post("/register", async (req: Request, res: Response) => {
     try {
@@ -92,7 +81,6 @@ app.post("/register", async (req: Request, res: Response) => {
     }
 });
 
-// ✅ Admin Login
 // @ts-ignore
 app.post("/login", async (req: Request, res: Response) => {
     try {
@@ -121,7 +109,6 @@ app.post("/login", async (req: Request, res: Response) => {
     }
 });
 
-// ✅ Job Posting (Protected Route)
 // @ts-ignore
 app.post("/jobs", async (req: AuthRequest, res: Response) => {
     try {
@@ -145,11 +132,7 @@ app.post("/jobs", async (req: AuthRequest, res: Response) => {
             return res.status(400).json({ message: parsedBody.error.format() });
         }
 
-        // console.log(req.userId);
-        // const {adminId} = req.body;
-        // if (!req.userId) {
-        //     return res.status(401).json({ message: "Unauthorized" });
-        // }
+       
 
         const newJob = await client.job.create({
             //@ts-ignore
@@ -166,7 +149,6 @@ app.post("/jobs", async (req: AuthRequest, res: Response) => {
     }
 });
 
-// ✅ Fetch All Jobs
 // @ts-ignore
 app.get("/jobs", async (req: Request, res: Response) => {
     try {
