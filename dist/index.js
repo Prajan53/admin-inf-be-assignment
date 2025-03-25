@@ -21,24 +21,16 @@ const cors = require("cors");
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8080;
 app.use(cors({
-    origin: "*", // Allow only your frontend
+    origin: "*",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    //   credentials: true, // Enable if using cookies or authorization headers
 }));
 app.use(express_1.default.json());
-//   app.options("*", (req, res) => {
-// 	res.header("Access-Control-Allow-Origin", "https://full-stack-assignment-be-lumv-black.vercel.app");
-// 	res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
-// 	res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-// 	res.header("Access-Control-Allow-Credentials", "true"); // Add this
-// 	res.sendStatus(200);
-//   });
-app.get('/', (_req, res) => {
+app.get('/', (req, res) => {
     return res.send('Express Typescript on Vercel');
 });
-app.get('/ping', (_req, res) => {
-    return res.send('pong 🏓');
+app.get('/ping', (req, res) => {
+    return res.send('pong');
 });
 const JWT_SECRET_USER = "TGFI*EAVBG8YWO!Ad%@#ladjsvahb#!&^ka1237474@kv";
 // Schema for admin registration and login
@@ -59,8 +51,6 @@ const authSchema = zod_1.z.object({
         .regex(/[./<>\?+*@;:\"^`#()_-]/, "Password must contain at least one special character")
         .regex(/[0-9]/, "Password must contain at least one number")
 });
-// ✅ Admin Registration
-// @ts-ignore
 app.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const parsedBody = authSchema.safeParse(req.body);
@@ -83,8 +73,6 @@ app.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, function* 
         return res.status(500).json({ message: "Internal server error", error });
     }
 }));
-// ✅ Admin Login
-// @ts-ignore
 app.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const parsedBody = authSchema.omit({ name: true }).safeParse(req.body);
@@ -107,8 +95,6 @@ app.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         return res.status(500).json({ message: "Internal server error", error });
     }
 }));
-// ✅ Job Posting (Protected Route)
-// @ts-ignore
 app.post("/jobs", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const jobSchema = zod_1.z.object({
@@ -126,13 +112,7 @@ app.post("/jobs", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (!parsedBody.success) {
             return res.status(400).json({ message: parsedBody.error.format() });
         }
-        // console.log(req.userId);
-        // const {adminId} = req.body;
-        // if (!req.userId) {
-        //     return res.status(401).json({ message: "Unauthorized" });
-        // }
         const newJob = yield prisma_1.client.job.create({
-            //@ts-ignore
             data: Object.assign(Object.assign({}, parsedBody.data), { adminId: "80965ba1-0fa9-46e4-b332-8df85bc541e6" }),
         });
         return res.status(201).json({ message: "Job created successfully", job: newJob });
@@ -142,8 +122,6 @@ app.post("/jobs", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.status(500).json({ message: "Internal server error", error });
     }
 }));
-// ✅ Fetch All Jobs
-// @ts-ignore
 app.get("/jobs", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const jobs = yield prisma_1.client.job.findMany({ orderBy: { createdAt: "desc" } });

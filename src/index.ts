@@ -1,7 +1,6 @@
 import express, { Request, Response } from 'express'
 import { z } from 'zod'
 import { client } from './lib/prisma'
-import userMiddleware from './middlewares/userMiddleware';
 const bcrypt = require ("bcrypt");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
@@ -20,11 +19,11 @@ app.use(
   
 
 
-app.get('/', (_req: Request, res: Response) => {
+app.get('/', (req: Request, res: Response) => {
 	return res.send('Express Typescript on Vercel')
 })
 
-app.get('/ping', (_req: Request, res: Response) => {
+app.get('/ping', (req: Request, res: Response) => {
 	return res.send('pong')
 })
 
@@ -54,7 +53,6 @@ const authSchema = z.object({
         .regex(/[0-9]/, "Password must contain at least one number")
 });
 
-// @ts-ignore
 app.post("/register", async (req: Request, res: Response) => {
     try {
         const parsedBody = authSchema.safeParse(req.body);
@@ -81,7 +79,6 @@ app.post("/register", async (req: Request, res: Response) => {
     }
 });
 
-// @ts-ignore
 app.post("/login", async (req: Request, res: Response) => {
     try {
         const parsedBody = authSchema.omit({ name: true }).safeParse(req.body);
@@ -109,7 +106,6 @@ app.post("/login", async (req: Request, res: Response) => {
     }
 });
 
-// @ts-ignore
 app.post("/jobs", async (req: AuthRequest, res: Response) => {
     try {
         const jobSchema = z.object({
@@ -135,11 +131,10 @@ app.post("/jobs", async (req: AuthRequest, res: Response) => {
        
 
         const newJob = await client.job.create({
-            //@ts-ignore
             data: {
                 ...parsedBody.data,
                 adminId: "80965ba1-0fa9-46e4-b332-8df85bc541e6", // Assign job to authenticated admin
-            },
+            } as any,
         });
 
         return res.status(201).json({ message: "Job created successfully", job: newJob });
@@ -149,7 +144,6 @@ app.post("/jobs", async (req: AuthRequest, res: Response) => {
     }
 });
 
-// @ts-ignore
 app.get("/jobs", async (req: Request, res: Response) => {
     try {
         const jobs = await client.job.findMany({ orderBy: { createdAt: "desc" } });
